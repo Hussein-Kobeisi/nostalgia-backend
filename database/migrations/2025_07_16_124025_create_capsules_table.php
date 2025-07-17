@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->date('create_date');
             $table->date('open_date');
-            $table->boolean('privacy');
+            $table->string('privacy');
             $table->boolean('surprise');
             $table->timestamps();
         });

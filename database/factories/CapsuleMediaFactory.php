@@ -17,7 +17,7 @@ class CapsuleMediaFactory extends Factory
     public function definition(): array
     {
         return [
-            "capsule_id" => rand(0,10),
+            "capsule_id" => rand(1,10),
             "file_path" => $this->faker->imageUrl(640, 480, 'nature', true, 'Faker'),
         ];
     }
