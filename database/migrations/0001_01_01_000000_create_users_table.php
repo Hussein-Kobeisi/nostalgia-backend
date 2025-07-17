@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('mobile');
             $table->string('password');
             $table->string('img_path');
+            $table->timestamps();
         });
     }
 

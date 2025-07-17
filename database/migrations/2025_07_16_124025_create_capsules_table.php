@@ -15,16 +15,18 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('name');
-            $table->timestamps('create_date');
-            $table->timestamps('open_date');
+            $table->date('create_date');
+            $table->date('open_date');
             $table->boolean('privacy');
             $table->boolean('surprise');
+            $table->timestamps();
         });
 
         Schema::create('capsule_media', function (Blueprint $table) {
             $table->id();
             $table->integer('capsule_id');
             $table->string('file_path');
+            $table->timestamps();
         });
     }
 
