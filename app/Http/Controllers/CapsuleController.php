@@ -9,6 +9,13 @@ class CapsuleController extends Controller
 {
     protected static $modelClass = Capsule::class;
 
+    public function __construct()
+    {
+        $this->middleware('auth:api')->only([
+            //methods to authorize here
+        ]);
+    }
+
     static function findCapsulesByUserId($userid){
         if($userid){
             $capsules = Capsule::where('user_id', $userid)->get();
