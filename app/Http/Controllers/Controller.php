@@ -42,6 +42,8 @@ abstract class Controller extends BaseController
 
     static function addOrUpdate(Request $request, $id=null){
         $modelClass = static::$modelClass;
+        $user = auth()->user();
+        //add verifications that authed user owns these objects
 
         if($id){
             $object = $modelClass::find($id);
@@ -66,16 +68,29 @@ abstract class Controller extends BaseController
 
     static function delete($id){
         $modelClass = static::$modelClass;
+        $user = auth()->user();
 
         if($id){
             $object = $modelClass::find($id);
-            
-            if(static::class == UserController::class){
-                CapsuleController::deleteCapsulesByUserId($id);
-            }
-            elseif(static::class == CapsuleController::class){
+
+            //check if capsuleController && user->id == capsule->user_id
+            //check if capsuleMediaController and find capsule and check user->id == capsule->user_id
+
+            if(static::class == CapsuleController::class)
                 CapsuleMediaController::deleteCapsuleMediaByCapsuleId($id);
-            }
+
+            $object->delete();
+
+            $response = [];
+            $response["status"] = "success";
+            $response["payload"] = $object;
+
+            return json_encode($response, 200);
+        }
+        elseif($user){
+            $object = $modelClass::find($user->id);
+            
+            CapsuleController::deleteCapsulesByUserId($user->id);
 
             $object->delete();
 

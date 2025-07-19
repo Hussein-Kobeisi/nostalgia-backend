@@ -14,12 +14,20 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
+        if(!($request->has('email') && $request->has('password'))){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Missing arguments',
+            ], 422);
+        }
+
         $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
+        
         $credentials = $request->only('email', 'password');
-
+        
         $token = Auth::attempt($credentials);
         if (!$token) {
             return response()->json([
@@ -41,6 +49,13 @@ class AuthController extends Controller
     }
 
     public function register(Request $request){
+        if(!($request->has('name') && $request->has('email') && $request->has('password'))){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Missing arguments',
+            ], 422);
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',

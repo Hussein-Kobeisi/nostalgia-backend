@@ -19,15 +19,15 @@ Route::group(['middleware' => 'auth:api'], function(){
     Route::controller(UserController::class)->group(function () {
         // Route::get('/users',                 'getAll');
         // Route::get('/users/{id?}',           'findById');
-        Route::post('/add_update_user/{id?}',   'addOrUpdate');
-        Route::post('/delete_user/{id?}',       'delete');
+        Route::post('/add_update_user',     'addOrUpdate');
+        Route::post('/delete_user',         'delete');
     });
 
     Route::controller(CapsuleController::class)->group(function () {
-        Route::get('/capsules/user/{userid?}',          'findCapsulesByUserId');
+        Route::get('/capsules/user',                    'findCapsulesByUserId');
         Route::post('/add_update_capsule/{id?}',        'addOrUpdate');
         Route::post('/delete_capsule/{id?}',            'delete');
-        Route::post('/delete_capsule/user/{userid?}',   'deleteCapsulesByUserId');        
+        Route::post('/delete_capsule/user',   'deleteCapsulesByUserId');        
     });
 
     Route::controller(CapsuleMediaController::class)->group(function () {
