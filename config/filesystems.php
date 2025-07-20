@@ -60,6 +60,11 @@ return [
             'report' => false,
         ],
 
+        'mediaFolder' => [
+            'driver' => 'local',
+            'root' => 'D:\Pictures\Laravel pics',
+        ],
+
     ],
 
     /*

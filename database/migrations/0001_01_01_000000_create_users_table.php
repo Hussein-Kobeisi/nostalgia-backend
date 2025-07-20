@@ -17,7 +17,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('mobile');
             $table->string('password');
+<<<<<<< Updated upstream
             $table->string('img_path');
+=======
+            $table->string('img_path')->nullable()->default('pic.png');
+>>>>>>> Stashed changes
             $table->timestamps();
         });
     }
