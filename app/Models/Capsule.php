@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Capsule extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'open_date',
+        'privacy',
+        'surprise'
+    ];
 }
