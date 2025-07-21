@@ -12,4 +12,11 @@ use App\Models\Scopes\PublicScope;
 class Capsule extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'open_date',
+        'privacy',
+        'surprise'
+    ];
 }

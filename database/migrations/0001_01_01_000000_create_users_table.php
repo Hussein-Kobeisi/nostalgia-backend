@@ -15,13 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('mobile');
+            $table->string('mobile')->nullable();
             $table->string('password');
-<<<<<<< Updated upstream
-            $table->string('img_path');
-=======
-            $table->string('img_path')->nullable()->default('pic.png');
->>>>>>> Stashed changes
+            $table->string('img_path')->nullable();
             $table->timestamps();
         });
     }

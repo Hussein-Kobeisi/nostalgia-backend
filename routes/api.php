@@ -7,16 +7,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-<<<<<<< Updated upstream
-Route::get('/ping', function () {
-    return response()->json(['message' => 'API is working!']);
-});
-
-Route::get('/login', function () {
-    return response()->json(['message' => 'Unauthenticated'], 401);
-})->name('login');
-=======
-
 Route::group(['middleware' => 'auth:api'], function(){
     
     Route::controller(AuthController::class)->group(function () {
@@ -66,4 +56,3 @@ Route::group(['prefix' => ''], function(){
     });
 
 });
->>>>>>> Stashed changes
