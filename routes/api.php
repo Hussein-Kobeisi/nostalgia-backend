@@ -6,25 +6,56 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CapsuleController;
 use App\Http\Controllers\CapsuleMediaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 
-Route::get('/capsules', [CapsuleController::class, 'getAll']);
-Route::get('/capsules/id/{id?}', [CapsuleController::class, 'findById']);
-Route::get('/capsules/user/{userid?}', [CapsuleController::class, 'findCapsulesByUserId']);
-Route::post('/add_update_capsule/{id?}', [CapsuleController::class, 'addOrUpdate']);
-Route::post('/delete_capsule/{id?}', [CapsuleController::class, 'delete']);
-Route::post('/delete_capsule/user/{userid?}', [CapsuleController::class, 'deleteCapsulesByUserId']);
 
-Route::get('/capsule_media', [CapsuleMediaController::class, 'getAll']);
-Route::get('/capsule_media/id/{id?}', [CapsuleMediaController::class, 'findById']);
-Route::get('/capsule_media/capsule/{capsuleid?}', [CapsuleMediaController::class, 'findCapsuleMediaByCapsuleId']);
-Route::post('/add_update_capsule_media/{id?}', [CapsuleMediaController::class, 'addOrUpdate']);
-Route::post('/delete_capsule_media/{id?}', [CapsuleMediaController::class, 'delete']);
-Route::post('/delete_capsule_media/capsule/{capsuleid?}', [CapsuleMediaController::class, 'deleteCapsuleMediaByCapsuleId']); //ids array passed to delete batch
+Route::group(['middleware' => 'auth:api'], function(){
+    
+    Route::controller(AuthController::class)->group(function () {
+        Route::post('logout', 'logout');
+        Route::post('refresh', 'refresh');
+    });
 
-Route::get('/users', [UserController::class, 'getAll']);
-Route::get('/users/{id?}', [UserController::class, 'findById']);
-Route::post('/add_update_user/{id?}', [UserController::class, 'addOrUpdate']);
-Route::post('/delete_user/{id?}', [UserController::class, 'delete']);
+    Route::controller(UserController::class)->group(function () {
+        // Route::get('/users',                 'getAll');
+        // Route::get('/users/{id?}',           'findById');
+        Route::post('/add_update_user',     'addOrUpdate');
+        Route::post('/delete_user',         'delete');
+    });
 
-Route::get('login', [UserController::class, 'loginUser']);
-Route::post('signup', [UserController::class, 'signupUser']);
+    Route::controller(CapsuleController::class)->group(function () {
+        Route::get('/capsules/user',                    'findCapsulesByUserId');
+        Route::post('/add_update_capsule/{id?}',        'addOrUpdate');
+        Route::post('/delete_capsule/{id?}',            'delete');
+        Route::post('/delete_capsule/user',   'deleteCapsulesByUserId');        
+    });
+
+    Route::controller(CapsuleMediaController::class)->group(function () {
+        Route::post('/add_update_capsule_media/{id?}',              'addOrUpdate');
+        Route::post('/delete_capsule_media/{id?}',                  'delete');
+        Route::post('/delete_capsule_media/capsule/{capsuleid?}',   'deleteCapsuleMediaByCapsuleId'); //ids array passed to delete batch
+    });
+});
+
+Route::group(['prefix' => 'guest'], function(){
+    Route::controller(AuthController::class)->group(function () {
+        Route::post('login', 'login');
+        Route::post('register', 'register');
+    });
+
+    Route::controller(UserController::class)->group(function () {
+        
+    });
+
+    Route::controller(CapsuleController::class)->group(function () {
+        Route::get('/capsules',                         'getAll');
+        Route::get('/capsules/id/{id?}',                'findById');
+    });
+
+    Route::controller(CapsuleMediaController::class)->group(function () {
+        Route::get('/capsule_media',                                'getAll');
+        Route::get('/capsule_media/id/{id?}',                       'findById');
+        Route::get('/capsule_media/capsule/{capsuleid?}',           'findCapsuleMediaByCapsuleId');
+    });
+
+});

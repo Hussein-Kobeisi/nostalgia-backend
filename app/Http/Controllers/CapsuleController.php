@@ -9,41 +9,33 @@ class CapsuleController extends Controller
 {
     protected static $modelClass = Capsule::class;
 
-    static function findCapsulesByUserId($userid){
-        if($userid){
-            $capsules = Capsule::where('user_id', $userid)->get();
+    static function findCapsulesByUserId(){
 
-            $response = [];
-            $response["status"] = "success";
-            $response["payload"] = $capsules;
+        $user = auth()->user();
 
-            return json_encode($response, 200);
-        }
+        $capsules = Capsule::where('user_id', $user->id)->get();
 
         $response = [];
-        $response["status"] = "failure";
+        $response["status"] = "success";
+        $response["user_id"] = $user->id;
+        $response["payload"] = $capsules;
 
-        return json_encode($response, 404);
+        return json_encode($response, 200);
     }
 
     static function deleteCapsulesByUserId($userid){
-        if($userid){
-            $capsules = Capsule::where('user_id', $userid)->get();
+        $user = auth()->user();
 
-            foreach($capsules as $cap){
-                CapsuleController::delete($cap->id);
-            }
+        $capsules = Capsule::where('user_id', $user->id)->get();
 
-            $response = [];
-            $response["status"] = "success";
-            $response["payload"] = $capsules;
-
-            return json_encode($response, 200);
+        foreach($capsules as $cap){
+            CapsuleController::delete($cap->id);
         }
 
         $response = [];
-        $response["status"] = "failure";
+        $response["status"] = "success";
+        $response["payload"] = $capsules;
 
-        return json_encode($response, 404);
+        return json_encode($response, 200);
     }
 }
