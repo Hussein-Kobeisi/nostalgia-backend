@@ -13,6 +13,7 @@ class CapsuleMediaSeeder extends Seeder
      */
     public function run(): void
     {   
+        CapsuleMedia::truncate();
         CapsuleMedia::factory(200)->create();
     }
 }
