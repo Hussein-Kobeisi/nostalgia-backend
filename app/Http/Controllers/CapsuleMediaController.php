@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CapsuleMedia;
+use App\Models\Capsule;
 
 class CapsuleMediaController extends Controller
 {
@@ -11,7 +12,7 @@ class CapsuleMediaController extends Controller
 
     static function findCapsuleMediaByCapsuleId($capid){
         if($capid){
-            $media = Capsule::where('user_id', $capid)->get();
+            $media = CapsuleMedia::where('capsule_id', $capid)->get();
 
             $response = [];
             $response["status"] = "success";

@@ -16,9 +16,15 @@ class CapsuleMediaFactory extends Factory
      */
     public function definition(): array
     {
+        $mediaFiles = array_merge(
+            collect(range(1, 13))->map(fn($i) => "p{$i}.png")->toArray(),
+            collect(range(1, 5))->map(fn($i) => "t{$i}.txt")->toArray(),
+            collect(range(1, 3))->map(fn($i) => "v{$i}.mp4")->toArray()
+        );
+
         return [
             "capsule_id" => rand(1,10),
-            "file_path" => $this->faker->imageUrl(640, 480, 'nature', true, 'Faker'),
+            "file_path" => 'storage/uploads/' . $this->faker->randomElement($mediaFiles),
         ];
     }
 }

@@ -23,12 +23,16 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+
+        $mediaFiles = array_merge(
+            collect(range(1, 13))->map(fn($i) => "p{$i}.png")->toArray(),
+        );
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'mobile' => '' . $this->faker->numberBetween(100000000, 999999999),
             'password' => static::$password ??= Hash::make('password'),
-            'img_path' => $this->faker->imageUrl(640, 480, 'people', true, 'Faker'),
+            'img_path' => 'storage/uploads/' . $this->faker->randomElement($mediaFiles),
         ];
     }
 }

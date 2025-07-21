@@ -12,7 +12,7 @@ class CapsuleMediaSeeder extends Seeder
      * Run the database seeds.
      */
     public function run(): void
-    {
-        CapsuleMedia::factory(50)->create();
+    {   
+        CapsuleMedia::factory(200)->create();
     }
 }
