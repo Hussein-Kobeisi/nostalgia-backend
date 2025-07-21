@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Model;
+use App\Models\User;
 use Illuminate\Routing\Controller as BaseController;
 
 abstract class Controller extends BaseController
@@ -44,7 +45,8 @@ abstract class Controller extends BaseController
         $modelClass = static::$modelClass;
         $user = auth()->user();
         //add verifications that authed user owns these objects
-
+        if($modelClass == User::class) 
+            $id = $user->id;
         if($id){
             $object = $modelClass::find($id);
         }else{
@@ -54,7 +56,8 @@ abstract class Controller extends BaseController
         $data = $request->only($object->getFillable());
 
         foreach($data as $field=>$value){
-            $object[$field] = $value;
+            if($value != null && $value != '')
+                $object[$field] = $value;
         }
 
         $object->save();
