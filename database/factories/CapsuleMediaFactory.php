@@ -24,7 +24,7 @@ class CapsuleMediaFactory extends Factory
 
         return [
             "capsule_id" => rand(1,10),
-            "file_path" => '/storage/uploads/' . $this->faker->randomElement($mediaFiles),
+            "file_path" => '/uploads/' . $this->faker->randomElement($mediaFiles),
         ];
     }
 }
