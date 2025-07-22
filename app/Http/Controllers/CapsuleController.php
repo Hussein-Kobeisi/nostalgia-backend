@@ -8,12 +8,12 @@ use App\Models\Capsule;
 class CapsuleController extends Controller
 {
     protected static $modelClass = Capsule::class;
-
+    
     static function findCapsulesByUserId(){
 
         $user = auth()->user();
 
-        $capsules = Capsule::where('user_id', $user->id)->get();
+        $capsules = Capsule::withoutGlobalScopes()->where('user_id', $user->id)->get();
 
         $response = [];
         $response["status"] = "success";
