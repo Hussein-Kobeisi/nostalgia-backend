@@ -14,7 +14,9 @@ class Capsule extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'name',
+        'create_date',
         'open_date',
         'privacy',
         'surprise'
