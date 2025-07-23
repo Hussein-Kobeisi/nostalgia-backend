@@ -13,7 +13,7 @@ class CapsuleController extends Controller
 
         $user = auth()->user();
 
-        $capsules = Capsule::withoutGlobalScopes()->where('user_id', $user->id)->get();
+        $capsules = Capsule::withoutGlobalScopes()->where('user_id', $user->id)->where('surprise', false)->get();
 
         $response = [];
         $response["status"] = "success";

@@ -28,7 +28,7 @@ Route::group(['middleware' => 'auth:api'], function(){
     });
 
     Route::controller(CapsuleMediaController::class)->group(function () {
-        Route::post('/add_update_capsule_media/{id?}',              'addOrUpdate'); //should remove {id?}
+        Route::post('/add_capsule_media',              'addMedia'); //should remove {id?}
         Route::post('/delete_capsule_media/{id?}',                  'delete');
         Route::post('/delete_capsule_media/capsule/{capsuleid?}',   'deleteCapsuleMediaByCapsuleId'); //ids array passed to delete batch
     });
