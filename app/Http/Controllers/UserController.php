@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Services\ResponseService;
 
 class UserController extends Controller
 {
@@ -23,10 +24,6 @@ class UserController extends Controller
             ];
         }, $users);
 
-        $response = [];
-        $response["status"] = "success";
-        $response["payload"] = $filteredUsers;
-
-        return json_encode($response, 200);
+        return ResponseService::successResponse($filteredUsers);
     }
 }

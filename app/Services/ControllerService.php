@@ -25,12 +25,11 @@ class ControllerService
 
     public function createOrUpdate($data, $id = null){
         $object = $this->findOrNew($id);
-        
         foreach($data as $field=>$value){
-            if($value != null && $value != '')
+            if($value !== null && $value !== '')
                 $object[$field] = $value;
         }
-
+        
         $object->save();
         return $object;
     }

@@ -7,6 +7,7 @@ use App\Models\CapsuleMedia;
 use App\Models\Capsule;
 use Illuminate\Support\Facades\Storage;
 use App\Services\CapsuleMediaService;
+use App\Services\ResponseService;
 
 class CapsuleMediaController extends Controller
 {
@@ -16,38 +17,23 @@ class CapsuleMediaController extends Controller
         if($capid){
             $media = CapsuleMedia::where('capsule_id', $capid)->get();
 
-            $response = [];
-            $response["status"] = "success";
-            $response["payload"] = $media;
-
-            return json_encode($response, 200);
+            return ResponseService::successResponse($media);
         }
 
-        $response = [];
-        $response["status"] = "failure";
-
-        return json_encode($response, 404);
+        return ResponseService::failureResponse('Media not found', 404);
     }
 
     static function deleteCapsuleMediaByCapsuleId($capid){
         if($capid){
             $media = Capsule::where('user_id', $capid)->get();
 
-            foreach($media as $m){
+            foreach($media as $m)
                 CapsuleController::delete($m->id);
-            }
 
-            $response = [];
-            $response["status"] = "success";
-            $response["payload"] = $media;
-
-            return json_encode($response, 200);
+            return ResponseService::successResponse($media);
         }
-        
-        $response = [];
-        $response["status"] = "failure";
 
-        return json_encode($response, 404);
+        return ResponseService::failureResponse('Media not found', 404);
     }
 
     static function addMedia(Request $request){
@@ -57,23 +43,17 @@ class CapsuleMediaController extends Controller
 
         $fileName = CapsuleMediaService::saveBase64File($base64file);
 
-        if ($fileName) {
-            $media->capsule_id = $request->input('capsule_id');
-            $media->file_path =  "/uploads/{$fileName}";
-            $media->save();
+        if (!$fileName)
+            return ResponseService::failureResponse();
 
-        }else{
-            $response = [];
-            $response["status"] = "failure";
+        $media->capsule_id = $request->input('capsule_id');
+        $media->file_path =  "/uploads/{$fileName}";
 
-            return response()->json(['status' => 'failure', 'base64' => $base64file], 400);
-        }
+        CapsuleMediaService::saveCapsuleMedia($media);
 
-        $response = [];
-        $response["status"] = "success";
-        $response["payload"] = $media;
+            
 
-        return json_encode($response, 200);
+        return ResponseService::successResponse($media);
     }
     
 }
