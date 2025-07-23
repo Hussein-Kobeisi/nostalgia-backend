@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use App\Services\ResponseService;
+use App\Services\AuthService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -14,12 +16,9 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
-        if(!($request->has('email') && $request->has('password'))){
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Missing arguments',
-            ], 422);
-        }
+        
+        if(!($request->has('email') && $request->has('password')))
+            return ResponseService::failureResponse('Missing arguments', 422);
 
         $request->validate([
             'email' => 'required|string|email',
@@ -27,34 +26,20 @@ class AuthController extends Controller
         ]);
         
         $credentials = $request->only('email', 'password');
-        
         $token = Auth::attempt($credentials);
-        if (!$token) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized',
-            ], 401);
-        }
+        if (!$token)
+            return ResponseService::failureResponse('Unauthorized', 401);
 
-        $user = Auth::user();
-        return response()->json([
-                'status' => 'success',
-                'user' => $user,
-                'authorisation' => [
-                    'token' => $token,
-                    'type' => 'bearer',
-                ]
-            ]);
+        $user = AuthService::getAuthedUser();
 
+        $authorisation = [  'token' => $token,
+                            'type' => 'bearer',];
+        return ResponseService::successResponse($user, 200, $authorisation);
     }
 
     public function register(Request $request){
-        if(!($request->has('name') && $request->has('email') && $request->has('password'))){
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Missing arguments',
-            ], 422);
-        }
+        if(!($request->has('name') && $request->has('email') && $request->has('password')))
+            return ResponseService::failureResponse('Missing arguments', 422);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -69,34 +54,24 @@ class AuthController extends Controller
         ]);
 
         $token = Auth::login($user);
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User created successfully',
-            'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
-        ]);
+
+        $authorisation = [  'token' => $token,
+                            'type' => 'bearer',];
+        return ResponseService::successResponse($user, 200, $authorisation);
     }
 
     public function logout(){
         Auth::logout();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Successfully logged out',
-        ]);
+        return ResponseService::successResponse();
     }
 
     public function refresh(){
-        return response()->json([
-            'status' => 'success',
-            'user' => Auth::user(),
-            'authorisation' => [
-                'token' => Auth::refresh(),
-                'type' => 'bearer',
-            ]
-        ]);
+        $user = AuthService::getAuthedUser();
+        $token = Auth::refresh();
+        $authorisation = [  'token' => $token,
+                            'type' => 'bearer',];
+
+        return ResponseService::successResponse($user, 200, $authorisation);
     }
 
 }

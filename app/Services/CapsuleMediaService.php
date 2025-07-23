@@ -11,21 +11,26 @@ class CapsuleMediaService
         if (!str_starts_with($base64file, 'data:'))     return false;
 
         [$meta, $base64Data] = explode(',', $base64file, 2);
-
         if (!preg_match('/^data:(.*?);base64$/', $meta, $matches)) return false;
 
         $mimeType = $matches[1];
         $extension = explode('/', $mimeType)[1] ?? 'bin';
-
         if ($extension === 'plain')     $extension = 'txt';
 
         $fileContent = base64_decode($base64Data);
-
         if ($fileContent === false)     return false;
 
         $fileName = uniqid() . '.' . $extension;
-        $saved = Storage::disk('public')->put("uploads/{$fileName}", $fileContent);
+        $saved = CapsuleMediaService::saveFileToUploads($fileContent, $fileName);
 
         return $saved ? $fileName : false;
+    }
+
+    static function saveFileToUploads($file, $fileName){
+        return Storage::disk('public')->put("uploads/{$fileName}", $file);
+    }
+
+    static function saveCapsuleMedia($media){
+        $media->save();
     }
 }
