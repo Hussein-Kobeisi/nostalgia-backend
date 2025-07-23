@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Model;
 use App\Models\User;
-use App\Http\Services\ResponseService;
-use App\Http\Services\ControllerService;
-use App\Http\Services\AuthService;
+use App\Services\ResponseService;
+use App\Services\ControllerService;
+use App\Services\AuthService;
 use Illuminate\Routing\Controller as BaseController;
 
 abstract class Controller extends BaseController
@@ -45,7 +45,9 @@ abstract class Controller extends BaseController
 
         if($modelClass == User::class) 
             $id = $user->id;
-        $data = $request->only($object->getFillable());
+
+        $fillable = $sevice->getFillable();
+        $data = $request->only($fillable);
 
         $object = $sevice->createOrUpdate($data, $id);
 

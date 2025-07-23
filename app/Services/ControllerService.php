@@ -10,8 +10,9 @@ class ControllerService
         $this->modelClass = $modelClass;
     }
 
-    public function new(){
-        return new $modelClass;
+    public function findOrNew($id = null){
+        $object = $id ? $this->findById($id) : new $this->modelClass;
+        return $object;
     }
 
     public function getAll(){
@@ -23,7 +24,7 @@ class ControllerService
     }
 
     public function createOrUpdate($data, $id = null){
-        $object = $id ? $this->modelClass::find($id) : new $this->modelClass;
+        $object = $this->findOrNew($id);
         
         foreach($data as $field=>$value){
             if($value != null && $value != '')
@@ -34,10 +35,14 @@ class ControllerService
         return $object;
     }
 
-    public function delete($id)
-    {
+    public function delete($id){
         $object = $this->modelClass::find($id);
         $object?->delete();
         return $object;
+    }
+
+    public function getFillable(){
+        $modelClass = $this->modelClass;
+        return (new $modelClass)->getFillable();
     }
 }

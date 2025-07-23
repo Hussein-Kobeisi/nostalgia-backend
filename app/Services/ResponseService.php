@@ -9,8 +9,13 @@ class ResponseService
         $response = [];
         $response["status"] = "success";
         $response["payload"] = $payload;
+        // $response["authorisation"] = $authorisation;
+        
+        return response()->json([
+                'status' => 'success',
+                'payload' => $payload
+            ], $statusCode);
 
-        return json_encode($response, $statusCode);
     }
 
     static function failureResponse($message = null, $statusCode = 400)
@@ -20,6 +25,9 @@ class ResponseService
         $response["status"] = "failure";
         $response["message"] = $message;
 
-        return json_encode($response, $statusCode);
+        return response()->json([
+                'status' => 'failure',
+                'message' => $message
+            ], $statusCode);
     }
 }
