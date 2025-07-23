@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Capsule;
+use App\Services\ResponseService;
+use App\Services\AuthService;
+
 
 class CapsuleController extends Controller
 {
@@ -11,31 +14,20 @@ class CapsuleController extends Controller
     
     static function findCapsulesByUserId(){
 
-        $user = auth()->user();
-
+        $user = AuthService::getAuthedUser();
         $capsules = Capsule::withoutGlobalScopes()->where('user_id', $user->id)->where('surprise', false)->get();
 
-        $response = [];
-        $response["status"] = "success";
-        $response["user_id"] = $user->id;
-        $response["payload"] = $capsules;
-
-        return json_encode($response, 200);
+        return ResponseService::successResponse($capsules, 200, null);
     }
 
     static function deleteCapsulesByUserId($userid){
-        $user = auth()->user();
-
+        $user = AuthService::getAuthedUser();
         $capsules = Capsule::where('user_id', $user->id)->get();
 
         foreach($capsules as $cap){
             CapsuleController::delete($cap->id);
         }
 
-        $response = [];
-        $response["status"] = "success";
-        $response["payload"] = $capsules;
-
-        return json_encode($response, 200);
+        return ResponseService::successResponse($capsules);
     }
 }

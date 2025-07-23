@@ -4,18 +4,16 @@ namespace App\Services;
 
 class ResponseService
 {
-    static function successResponse($payload = null, $statusCode = 200)
+    static function successResponse($payload = null, $statusCode = 200, $authorisation = null, $extra = [])
     {
         $response = [];
         $response["status"] = "success";
         $response["payload"] = $payload;
-        // $response["authorisation"] = $authorisation;
+        $response["authorisation"] = $authorisation;
         
-        return response()->json([
-                'status' => 'success',
-                'payload' => $payload
-            ], $statusCode);
+        $response = array_merge($response, $extra);
 
+        return json_encode($response, $statusCode);
     }
 
     static function failureResponse($message = null, $statusCode = 400)
@@ -25,9 +23,6 @@ class ResponseService
         $response["status"] = "failure";
         $response["message"] = $message;
 
-        return response()->json([
-                'status' => 'failure',
-                'message' => $message
-            ], $statusCode);
+        return json_encode($response, $statusCode);
     }
 }
